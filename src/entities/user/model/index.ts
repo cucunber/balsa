@@ -1,16 +1,9 @@
-import { makeAutoObservable } from "mobx";
-import { IUser } from "./type";
+import { types as t, Instance } from "mobx-state-tree";
 
-class User implements IUser {
-    id: IUser['id']
-    name: IUser['name']
-    surname: IUser['surname']
+export const User = t.model("User", {
+    id: t.identifier,
+    email: t.string,
+    username: t.string,
+})
 
-    constructor(private store: any, user: IUser){
-        this.id = user.id;
-        this.name = user.name;
-        this.surname = user.name;
-
-        makeAutoObservable(this);
-    }
-}
+export type IUser = Instance<typeof User>;

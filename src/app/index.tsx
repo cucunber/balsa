@@ -1,22 +1,16 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { ChakraProvider } from '@chakra-ui/react'
+import ReactDOM from "react-dom/client";
+import { ChakraProvider } from "@chakra-ui/react";
 
-import './index.css'
-import { withProviders } from './providers'
-import { Routing } from 'pages'
+import "./index.css";
+import { withProviders } from "./providers";
+import { Routing } from "pages";
 
 const App = withProviders(function App() {
-  return (
-    <Routing />
-  )
-})
+  return <Routing />;
+});
 
-
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <ChakraProvider>
-      <App />
-    </ChakraProvider>
-  </React.StrictMode>,
-)
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+  <ChakraProvider>
+    <App />
+  </ChakraProvider>
+);
