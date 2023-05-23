@@ -9,16 +9,18 @@ export interface ISessionDto {
     cinema: ICinemaDto,
     hall: IHallDto,
     movie: IMovieDto,
-    price: IPriceDto,
+    price: IPriceDto[],
 }
 
-type IGetMoviesParameters = {
+type IGetSessiomParameters = {
     datetime_from: string,
     datetime_to: string,
     price_from: string,
     price_to: string,
+    movie_id: string,
+    cinema_id: string,
 }
 
-export interface IMovieService {
-    getMovies(params: IGetMoviesParameters): PromiseRequestData<ISessionDto[]>
+export interface ISessionService {
+    getSessions(params?: Partial<IGetSessiomParameters>): PromiseRequestData<ISessionDto[]>
 }

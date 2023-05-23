@@ -1,16 +1,27 @@
 import ReactDOM from "react-dom/client";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 
 import "./index.css";
-import { withProviders } from "./providers";
-import { Routing } from "pages";
+import { withRouter } from "./providers";
+import { StoreContext, store } from "shared/store";
+import { AppLayout } from "./layout";
 
-const App = withProviders(function App() {
-  return <Routing />;
+import { MultiSelectTheme } from "chakra-multiselect";
+
+const theme = extendTheme({
+  components: {
+    MultiSelect: MultiSelectTheme,
+  },
 });
 
+const App = withRouter(() => (
+  <StoreContext.Provider value={store}>
+    <AppLayout />
+  </StoreContext.Provider>
+));
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <ChakraProvider>
+  <ChakraProvider theme={theme}>
     <App />
   </ChakraProvider>
 );

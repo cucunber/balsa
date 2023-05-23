@@ -3,9 +3,14 @@ import { IMovieService } from "./type";
 
 export class MovieServices implements IMovieService {
   constructor(private api: Api) {}
-  async getMovies(): ReturnType<IMovieService["getMovies"]> {
+  async getMovies(
+    ...args: Parameters<IMovieService["getMovies"]>
+  ): ReturnType<IMovieService["getMovies"]> {
+    const [params] = args;
     try {
-      const { data } = await this.api.instance.get("/movie");
+      const { data } = await this.api.instance.get("/movie", {
+        params,
+      });
       return [false, data];
     } catch (error) {
       return [true, error];
@@ -17,6 +22,14 @@ export class MovieServices implements IMovieService {
     const [id] = params;
     try {
       const { data } = await this.api.instance.get(`/movie/${id}`);
+      return [false, data];
+    } catch (error) {
+      return [true, error];
+    }
+  }
+  async getPopularMovies(): ReturnType<IMovieService["getPopularMovies"]> {
+    try {
+      const { data } = await this.api.instance.get(`/movie/popular`);
       return [false, data];
     } catch (error) {
       return [true, error];

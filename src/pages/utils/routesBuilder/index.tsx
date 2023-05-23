@@ -1,11 +1,15 @@
 import { IRoutes } from "pages/config";
 import { Route } from "react-router";
 
-function routesBuilder({ path, element, children }: IRoutes){
+function routesBuilder(routes: IRoutes[]) {
+  return routes.map(({ path, element, children }) => {
     const Element = element;
-    return(
-        <Route path={path} element={<Element />}>{children?.map((route) => routesBuilder(route))}</Route>
-    )
+    return (
+      <Route key={path} path={path} element={<Element />}>
+        {children && routesBuilder(children)}
+      </Route>
+    );
+  });
 }
 
 export default routesBuilder;

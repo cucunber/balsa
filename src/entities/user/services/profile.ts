@@ -1,5 +1,5 @@
 import { Api } from "shared/libs/api";
-import { IProfileService, IUserDto } from "./type";
+import { IProfileService } from "./type";
 
 export class ProfileService implements IProfileService {
   constructor(private api: Api) {}

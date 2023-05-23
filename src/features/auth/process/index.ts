@@ -22,39 +22,42 @@ const updateTokens = ({ access, refresh }: Partial<ITokenPairDto>) => {
 export const useAuth = () => {
   const authService = useRef(new AuthService(instance));
 
-  const updateInterceptor = useCallback((tokens: ITokenPairDto) => {
+  const updateInterceptor = useCallback(async (tokens: ITokenPairDto) => {
     updateTokens(tokens);
     const createInterceptor = () => {
-      instance.setRequestInterceptor(
-        (config) => {
-          config.headers.Authorization = `Bearer ${tokens.access}`;
-          return config;
-        },
-        (error) => error
-      );
-      const interceptor = instance.setResponseInterceptor(
-        (config) => config,
-        (error) => {
-          if (error.response.status !== 401) {
-            return Promise.reject(error);
+      return new Promise((resolve) => {
+        instance.setRequestInterceptor(
+          (config) => {
+            config.headers.Authorization = `Bearer ${tokens.access}`;
+            return config;
+          },
+          (error) => error
+        );
+        const interceptor = instance.setResponseInterceptor(
+          (config) => config,
+          (error) => {
+            if (error.response.status !== 401) {
+              return Promise.reject(error);
+            }
+            instance.setResponseEject(interceptor);
+            return authService.current
+              .refreshToken(tokens.refresh)
+              .then(([error_, data]) => {
+                if (error_) {
+                  clearTokens();
+                  return Promise.reject(data);
+                }
+                updateTokens(data);
+                error.response.config.headers.Authorization = `Bearer ${data.access}`;
+                return instance.instance(error.response.config);
+              })
+              .finally(createInterceptor);
           }
-          instance.setResponseEject(interceptor);
-          return authService.current
-            .refreshToken(tokens.refresh)
-            .then(([error_, data]) => {
-              if (error_) {
-                clearTokens();
-                return Promise.reject(data);
-              }
-              updateTokens(data);
-              error.response.config.headers.Authorization = `Bearer ${data.access}`;
-              return instance.instance(error.response.config);
-            })
-            .finally(createInterceptor);
-        }
-      );
+        );
+        resolve(null);
+      });
     };
-    createInterceptor();
+    await createInterceptor();
   }, []);
 
   const authByToken = useCallback(async () => {
@@ -67,8 +70,16 @@ export const useAuth = () => {
       clearTokens();
       return { error: data };
     }
+    const access = localStorage.getItem(authKeys.accessToken);
+    const refresh = localStorage.getItem(authKeys.refreshToken);
+    if (access && refresh) {
+      await updateInterceptor({
+        access,
+        refresh,
+      });
+    }
     return data;
-  }, []);
+  }, [updateInterceptor]);
 
   const authByPassword = useCallback(
     async (...params: Parameters<AuthService["createToken"]>) => {
@@ -83,8 +94,15 @@ export const useAuth = () => {
     [updateInterceptor]
   );
 
+  const logout = useCallback(() => {
+    clearTokens();
+    instance.resetInterceptors();
+    return null;
+  }, []);
+
   return {
     authByToken,
     authByPassword,
+    logout,
   };
 };

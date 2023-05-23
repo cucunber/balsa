@@ -25,7 +25,7 @@ export class AuthService implements IAuthService {
       const [refresh] = params;
       const { data } = await this.api.post<ITokenPairDto>(
         "/auth/jwt/refresh/",
-        refresh
+        { refresh },
       );
       return [false, data];
     } catch (error) {

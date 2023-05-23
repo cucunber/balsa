@@ -10,10 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.0.19",
     "@chakra-ui/react": "^2.6.1",
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
+    "@hookform/resolvers": "^3.1.0",
     "axios": "^1.4.0",
+    "chakra-multiselect": "0.3.7",
     "compose-function": "^3.0.3",
     "framer-motion": "^10.12.8",
     "mobx": "^6.9.0",
@@ -24,7 +27,9 @@
     "react-hook-form": "^7.43.9",
     "react-ioc": "^1.0.0",
     "react-router": "^6.11.1",
-    "react-router-dom": "^6.11.1"
+    "react-router-dom": "^6.11.1",
+    "swiper": "^9.3.2",
+    "yup": "^1.1.1"
   },
   "devDependencies": {
     "@types/compose-function": "^0.0.30",

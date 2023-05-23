@@ -1,11 +1,11 @@
 import { Api } from "shared/libs/api";
-import { IMovieService } from "./type";
+import { ISessionService } from "./type";
 
-export class SessionServices implements IMovieService {
+export class SessionServices implements ISessionService {
   constructor(private api: Api) {}
-  async getMovies(
-    ...args: Parameters<IMovieService["getMovies"]>
-  ): ReturnType<IMovieService["getMovies"]> {
+  async getSessions(
+    ...args: Parameters<ISessionService["getSessions"]>
+  ): ReturnType<ISessionService["getSessions"]> {
     const [params] = args;
     try {
       const { data } = await this.api.instance.get("/sessions", { params });

@@ -1,6 +1,7 @@
 export interface IHallDto {
   id: int;
   number: int;
-  places: int;
+  seats_count: int;
+  rows_count: int;
   cinema: int;
 }

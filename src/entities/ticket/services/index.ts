@@ -8,7 +8,7 @@ export class TicketServices implements ITicketService {
   ): ReturnType<ITicketService["buyTicket"]> {
     const [body] = params;
     try {
-      const { data } = await this.api.post<ITicketDto>("/ticket", body);
+      const { data } = await this.api.post<ITicketDto>("/ticket", body.body);
       return [false, data];
     } catch (error) {
       return [true, null];
@@ -48,6 +48,25 @@ export class TicketServices implements ITicketService {
       return [false, true];
     } catch (error) {
       return [true, error];
+    }
+  }
+  async getOccupiedPlaces(
+    ...args: Parameters<ITicketService["getOccupiedPlaces"]>
+  ): ReturnType<ITicketService["getOccupiedPlaces"]> {
+    try {
+      const [params] = args;
+      const { data } = await this.api.get(`/occupied-places`, { params });
+      return [false, data];
+    } catch (error) {
+      return [true, error];
+    }
+  }
+  async userTickets(): ReturnType<ITicketService["userTickets"]> {
+    try {
+      const { data } = await this.api.get(`/tickets`);
+      return [false, data];
+    } catch (error) {
+      return [true, null];
     }
   }
 }
